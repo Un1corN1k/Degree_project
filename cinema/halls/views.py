@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, CreateView, DetailView
-from .forms import MovieSessionForm, CinemaHallForm
+from .forms import MovieSessionForm, CinemaHallForm, ReserveSeatForm
 from .models import CinemaHall, MovieSession, Ticket
 from movies.models import Movie
 
@@ -84,22 +84,24 @@ def create_movie_session(request):
     return render(request, 'halls/create_movie_session.html', {'form': form, 'halls': halls, 'movies': movies})
 
 
-@login_required
+def movie_session_list(request):
+    sessions = MovieSession.objects.all()
+    return render(request, 'halls/movie_session_list.html', {'sessions': sessions})
+
+
 def reserve_seat(request, session_id):
     session = get_object_or_404(MovieSession, pk=session_id)
 
     if request.method == 'POST':
-        if session.available_seats > 0 and not session.is_seat_reserved:
-            # Create a new ticket and deduct from available seats
-            ticket = Ticket(session=session)
-            ticket.save()
-
-            # Update available seats
-            session.available_seats -= 1
-            session.save()
-
+        seat_number = int(request.POST.get('seat_number', 0))
+        if session.reserve_seat(request.user, seat_number):
             return render(request, 'halls/seat_reserved.html', {'session': session})
         else:
             return render(request, 'halls/no_seats_available.html', {'session': session})
 
     return render(request, 'halls/reserve_seat.html', {'session': session})
+
+
+def seat_reserved(request, session_id):
+    session = get_object_or_404(MovieSession, pk=session_id)
+    return render(request, 'halls/seat_reserved.html', {'session': session})

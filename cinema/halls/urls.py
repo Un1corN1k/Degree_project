@@ -8,5 +8,8 @@ urlpatterns = [
     path('movie_sessions/', MovieSessionListView.as_view(), name='movie-session-list'),
     path('movie-sessions/create/', views.create_movie_session, name='movie-session-create'),
     path('movie_session/<int:pk>/', MovieSessionDetailView.as_view(), name='movie-sessions-detail'),
-    path('reserve_seat/<int:session_id>/', reserve_seat, name='reserve_seat'),
+    path('movie-sessions/', views.movie_session_list, name='movie-session-list'),
+    path('reserve-seat/<int:session_id>/', views.reserve_seat, name='reserve_seat'),
+    path('seat-reserved/<int:session_id>/', views.seat_reserved, name='seat_reserved'),
 ]
+

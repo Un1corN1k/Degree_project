@@ -19,3 +19,7 @@ class MovieSessionForm(forms.ModelForm):
             'start_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'end_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
+
+
+class ReserveSeatForm(forms.Form):
+    seat_number = forms.IntegerField(min_value=1)

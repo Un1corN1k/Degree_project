@@ -8,6 +8,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from .models import CustomUser
+from halls.models import Ticket
 
 
 class LoginRegisterView(TemplateView):
@@ -17,7 +18,8 @@ class LoginRegisterView(TemplateView):
 @login_required
 def user_profile(request):
     user = request.user
-    return render(request, 'accounts/user_profile.html', {'user': user})
+    reserved_tickets = Ticket.objects.filter(user=user)
+    return render(request, 'accounts/user_profile.html', {'user': user, 'reserved_tickets': reserved_tickets})
 
 
 class UserLoginView(LoginView):

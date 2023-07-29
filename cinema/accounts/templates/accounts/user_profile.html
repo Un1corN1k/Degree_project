@@ -16,6 +16,23 @@
                         <p class="mb-0"><strong>Дата реєстрації:</strong> {{ user.date_joined }}</p>
                     </div>
                 </div>
+                {% if reserved_tickets %}
+                    <div class="mt-4">
+                        <h4 class="mb-3">Зарезервовані білети:</h4>
+                        <ul class="list-group">
+                            {% for ticket in reserved_tickets %}
+                                <li class="list-group-item">
+                                    Фільм: {{ ticket.session.movie.title }}
+                                    Кінозал: {{ ticket.session.hall.name }}
+                                    Місце: {{ ticket.seat_number }}
+                                    Ціна: {{ ticket.price }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% else %}
+                    <p class="mt-4">Ви ще не зарезервували жодного білету.</p>
+                {% endif %}
                 {% if user.is_superuser %}
                     <div class="mt-4 text-center">
                         <a href="{% url 'movie-session-create' %}" class="btn btn-primary">Створити кіносеанс</a>
@@ -26,5 +43,3 @@
         </div>
     </div>
 {% endblock %}
-
-
