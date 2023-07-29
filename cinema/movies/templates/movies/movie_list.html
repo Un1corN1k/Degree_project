@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Список фільмів - MyCinema{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">Список фільмів</h1>
+    </div>
+    <div class="container mt-4">
+        <form method="get" class="form-inline mb-4">
+    <label for="sort_order" class="mr-2">Сортувати за:</label>
+    <select name="sort_order" id="sort_order" class="form-control mr-2">
+        <option value="date">Датою прем'єри</option>
+        <option value="price">Ціною</option>
+    </select>
+    <label for="sort_direction" class="mr-2">Напрямок:</label>
+    <select name="sort_direction" id="sort_direction" class="form-control mr-2">
+        <option value="asc">За зростанням</option>
+        <option value="desc">За спаданням</option>
+    </select>
+    <input type="hidden" name="sort_by" value="">
+    <button type="submit" class="btn btn-primary">Сортувати</button>
+</form>
+
+        <div class="row">
+            {% for movie in movies %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ movie.poster.url }}" class="card-img-top" alt="{{ movie.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="{% url 'movie_detail' movie.pk %}">{{ movie.title }}</a></h5>
+                            <p class="card-text"><strong>Дата виходу:</strong> {{ movie.release_date }}</p>
+                            <p class="card-text"><strong>Тривалість:</strong> {{ movie.duration }} хвилин</p>
+                            <p class="card-text"><strong>Опис:</strong> {{ movie.description }}</p>
+                            <p class="card-text"><strong>Ціна:</strong> {{ movie.price }} грн</p>
+                            <a href="{% url 'movie-session-list' %}" class="btn btn-success">Придбати квиток</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{% url 'movie_create' %}" class="btn btn-primary mt-4">Додати фільм</a>
+{% endblock %}
+
+<style>
+    .jumbotron {
+        background-color: #343a40;
+        color: #ffffff;
+        text-align: center;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .jumbotron h1 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-img-top {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .card-text {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .mt-4 {
+        margin-top: 1rem;
+    }
+
+    .mb-4 {
+        margin-bottom: 1rem;
+    }
+
+    .row {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+
+    .col-md-4 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+</style>

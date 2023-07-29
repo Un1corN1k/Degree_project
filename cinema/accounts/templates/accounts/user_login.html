@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Авторизація - MyCinema{% endblock %}
+
+{% block content %}
+    <h1>Авторизація </h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Ввійти</button>
+    </form>
+{% endblock %}

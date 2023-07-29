@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}No Seats Available{% endblock %}
+
+{% block content %}
+    <h1>No Seats Available</h1>
+    <p>Sorry, all seats have been booked for the movie session in {{ session.hall.name }}.</p>
+    <p>Session Date: {{ session.start_date }}</p>
+    <p>Session Time: {{ session.start_time }}</p>
+    <a href="{% url 'movie-session-list' %}">Back to Movie Sessions List</a>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Cinema Halls List{% endblock %}
+
+{% block content %}
+    <h1>Cinema Halls List</h1>
+    <ul>
+        {% for hall in halls %}
+            <li>{{ hall.name }} - {{ hall.size }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'cinema-hall-create' %}">Create Cinema Hall</a>
+{% endblock %}

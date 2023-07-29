@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Movie Sessions List{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="mb-4" style="font-family: 'Arial', sans-serif; color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 10px;">Movie Sessions List</h1>
+    <ul class="list-unstyled">
+      {% for session in sessions %}
+        <li class="media mb-4">
+          <img src="{{ session.movie.poster.url }}" alt="{{ session.movie.title }}" class="mr-3" width="200" height="250">
+          <div class="media-body">
+            <h5 class="mt-0 mb-1" style="font-family: 'Arial', sans-serif; color: #007bff;">Movie: {{ session.movie.title }}</h5>
+            <p style="font-family: 'Verdana', sans-serif; color: #333;">Hall: {{ session.hall.name }}</p>
+            <p style="font-family: 'Verdana', sans-serif; color: #555; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">Start Date: {{ session.start_date }}</p>
+            <p style="font-family: 'Verdana', sans-serif; color: #555; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">End Date: {{ session.end_date }}</p>
+            <p style="font-family: 'Verdana', sans-serif; color: #555; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">Time: {{ session.movie.duration }} minutes</p>
+            <p style="font-family: 'Verdana', sans-serif; color: #555;">Available Seats: {{ session.get_available_seats }}</p>
+            <a href="{% url 'reserve_seat' session.id %}" class="btn btn-primary">Order Ticket</a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

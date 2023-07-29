@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Seat Reserved{% endblock %}
+
+{% block content %}
+    <h1>Seat Reserved</h1>
+    <p>Your seat has been successfully reserved for the movie session in {{ session.hall.name }}.</p>
+    <p>Session Date: {{ session.start_date }}</p>
+    <p>Session Time: {{ session.start_time }}</p>
+    <a href="{% url 'movie-session-list' %}">Back to Movie Sessions List</a>
+{% endblock %}

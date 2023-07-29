@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Reserve Seat - MyCinema{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1>Reserve Seat</h1>
+    <div class="card">
+      <img src="{{ session.movie.poster.url }}" alt="{{ session.movie.title }}" class="mr-3" width="200" height="250">
+      <div class="card-body">
+        <h5 class="card-title" style="font-family: 'Arial', sans-serif; color: #007bff;">{{ session.movie.title }}</h5>
+        <p class="card-text" style="font-family: 'Verdana', sans-serif; color: #333;">Hall: {{ session.hall.name }}</p>
+        <p class="card-text" style="font-family: 'Verdana', sans-serif; color: #555; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">Start Date: {{ session.start_date }}</p>
+        <p class="card-text" style="font-family: 'Verdana', sans-serif; color: #555; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">End Date: {{ session.end_date }}</p>
+        <p class="card-text" style="font-family: 'Verdana', sans-serif; color: #555; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">Time: {{ session.movie.duration }} minutes</p>
+        <p class="card-text" style="font-family: 'Verdana', sans-serif; color: #555;">Available Seats: {{ session.get_available_seats }}</p>
+
+        {% if session.is_seat_reserved %}
+          <p class="card-text text-danger">You have already reserved a seat for this session.</p>
+        {% elif session.available_seats > 0 %}
+          <form method="post">
+            {% csrf_token %}
+            <label for="seat_number">Choose a Seat (1 to {{ session.hall.size }}):</label>
+            <input type="number" name="seat_number" id="seat_number" min="1" max="{{ session.hall.size }}">
+            <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Reserve Seat</button>
+          </form>
+        {% else %}
+          <p class="card-text text-danger">No seats available for this session.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

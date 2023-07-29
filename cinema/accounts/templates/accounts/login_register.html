@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Вхід - MyCinema{% endblock %}
+
+{% block content %}
+    <h1>Вхід</h1>
+    <p>Оберіть дію:</p>
+    <a href="{% url 'user_login' %}" class="btn btn-primary">Ввійти</a>
+    <a href="{% url 'user_registration' %}" class="btn btn-secondary">Зареєструватись</a>
+{% endblock %}

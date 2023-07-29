@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Профіль користувача{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Профіль користувача</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Ім'я користувача:</strong> {{ user.username }}</p>
+                        <p class="mb-1"><strong>Email:</strong> {{ user.email }}</p>
+                        <p class="mb-0"><strong>Дата реєстрації:</strong> {{ user.date_joined }}</p>
+                    </div>
+                </div>
+                {% if user.is_superuser %}
+                    <div class="mt-4 text-center">
+                        <a href="{% url 'movie-session-create' %}" class="btn btn-primary">Створити кіносеанс</a>
+                        <a href="{% url 'cinema-hall-create' %}" class="btn btn-primary">Додати кінозал</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

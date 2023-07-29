@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}{{ movie.title }} - MyCinema{% endblock %}
+
+{% block content %}
+    <h1>{{ movie.title }}</h1>
+    <p><strong>Дата выхода:</strong> {{ movie.release_date }}</p>
+    <p><strong>Ціна:</strong> {{ movie.price }} UAH</p>
+    <p><strong>Продолжительность:</strong> {{ movie.duration }} минут</p>
+    <p><strong>Описание:</strong> {{ movie.description }}</p>
+    <a href="{% url 'movie_update' movie.pk %}" class="btn btn-primary">Редактировать</a>
+    <a href="{% url 'movie_delete' movie.pk %}" class="btn btn-danger">Удалить</a>
+{% endblock %}

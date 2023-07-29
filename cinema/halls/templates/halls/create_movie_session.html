@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Створити кіносеанс{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Створити кіносеанс</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                            <script>
+                                flatpickr(".datetime-input", {
+                                    enableTime: true,
+                                    dateFormat: "Y-m-d H:i",
+                                });
+                                flatpickr(".date-input", {
+                                    dateFormat: "Y-m-d",
+                                });
+                            </script>
+                            <button type="submit" class="btn btn-primary">Створити</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
