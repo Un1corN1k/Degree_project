@@ -8,12 +8,13 @@
     <div class="card">
       <img src="{{ session.movie.poster.url }}" alt="{{ session.movie.title }}" class="mr-3" width="200" height="250">
       <div class="card-body">
-        <h5 class="card-title">{{ session.movie.title }}</h5>
-        <p class="card-text">Hall: {{ session.hall.name }}</p>
-        <p class="card-text">Start Date: {{ session.start_date }}</p>
-        <p class="card-text">End Date: {{ session.end_date }}</p>
-        <p class="card-text">Time: {{ session.movie.duration }} minutes</p>
-        <p class="card-text">Seat Reserved Successfully!</p>
+        <h5 class="card-title" style="color: #007bff;">{{ session.movie.title }}</h5>
+        <p class="card-text" style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;">Hall: {{ session.hall.name }}</p>
+        <p class="card-text" style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;">Start Date: {{ session.start_date }}</p>
+        <p class="card-text" style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;">End Date: {{ session.end_date }}</p>
+        <p class="card-text" style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;">Time: {{ session.movie.duration }} minutes</p>
+        <p class="card-text" style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;">Seat Reserved Successfully!</p>
+        <a href="{% url 'movie-session-list' %}">Back to Movie Sessions List</a>
       </div>
     </div>
   </div>

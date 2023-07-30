@@ -7,21 +7,27 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Бронювання місця</h3>
+                    <div class="movie-poster">
+                        <img src="{{ session.movie.poster.url }}" alt="{{ session.movie.title }}" class="img-fluid">
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ session.movie.title }}</h5>
-                        <p class="card-text">Кінозал: {{ session.hall.name }}</p>
-                        <p class="card-text">Дата: {{ session.start_date }}</p>
-                        <p class="card-text">Час: {{ session.start_time }}</p>
-                        <p class="card-text">Вільні місця: {{ session.available_seats }}</p>
-                        <form method="post">
-                            {% csrf_token %}
-                            <label for="seat_number">Виберіть місце:</label>
-                            <input type="number" id="seat_number" name="seat_number" min="1" max="{{ session.hall.size }}" required>
-                            <button type="submit" class="btn btn-primary mt-2">Забронювати</button>
-                        </form>
+                    <div class="movie-details">
+                        <p class="movie-title" style="font-size: 1.5rem; color: #007bff;">{{ session.movie.title }}</p>
+                        <p style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;"><strong>Кінозал:</strong> {{ session.hall.name }}</p>
+                        <p style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;"><strong>Дата:</strong> {{ session.start_date }}</p>
+                        <p style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;"><strong>Час:</strong> {{ session.start_time }}</p>
+
+                        {% if session.available_seats > 0 %}
+                            <p style="border: 1px solid #ccc; padding: 5px; border-radius: 5px;"><strong>Вільні місця:</strong> {{ session.available_seats }}</p>
+                            <div class="form-container" style="text-align: center;">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit" class="btn btn-primary mt-2">Забронювати</button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <p class="no-seats-available">На жаль, для цього сеансу немає вільних місць.</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>

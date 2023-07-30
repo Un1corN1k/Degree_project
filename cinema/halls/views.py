@@ -18,7 +18,7 @@ class CinemaHallCreateView(CreateView):
     model = CinemaHall
     form_class = CinemaHallForm
     template_name = 'halls/cinema_hall_create.html'
-    success_url = reverse_lazy('cinema_hall_list')
+    success_url = reverse_lazy('user_profile')
 
 
 class MovieSessionListView(ListView):
@@ -93,13 +93,17 @@ def reserve_seat(request, session_id):
     session = get_object_or_404(MovieSession, pk=session_id)
 
     if request.method == 'POST':
-        seat_number = int(request.POST.get('seat_number', 0))
-        if session.reserve_seat(request.user, seat_number):
-            return render(request, 'halls/seat_reserved.html', {'session': session})
-        else:
-            return render(request, 'halls/no_seats_available.html', {'session': session})
+        form = ReserveSeatForm(request.POST, available_seats_list=session.get_available_seats_list())
+        if form.is_valid():
+            seat_number = form.cleaned_data['seat_number']
+            if session.reserve_seat(request.user, seat_number):
+                return render(request, 'halls/seat_reserved.html', {'session': session})
+            else:
+                return render(request, 'halls/no_seats_available.html', {'session': session})
+    else:
+        form = ReserveSeatForm(available_seats_list=session.get_available_seats_list())
 
-    return render(request, 'halls/reserve_seat.html', {'session': session})
+    return render(request, 'halls/reserve_seat.html', {'session': session, 'form': form})
 
 
 def seat_reserved(request, session_id):

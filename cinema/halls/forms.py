@@ -22,4 +22,9 @@ class MovieSessionForm(forms.ModelForm):
 
 
 class ReserveSeatForm(forms.Form):
-    seat_number = forms.IntegerField(min_value=1)
+    seat_number = forms.IntegerField(label='Місце', widget=forms.Select)
+
+    def __init__(self, *args, **kwargs):
+        available_seats_list = kwargs.pop('available_seats_list', [])
+        super().__init__(*args, **kwargs)
+        self.fields['seat_number'].widget.choices = [(seat, seat) for seat in available_seats_list]
