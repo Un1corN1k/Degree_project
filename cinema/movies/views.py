@@ -1,9 +1,9 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .forms import MovieForm
 from .models import Movie
-from django.contrib.auth.decorators import user_passes_test, login_required
-from django.shortcuts import render, redirect
+from .permissions import IsUserSuperUser
 
 
 class HomeListView(ListView):
@@ -71,23 +71,18 @@ class MovieDetailView(DetailView):
     template_name = 'movies/movie_detail.html'
     context_object_name = 'movie'
 
-
-@login_required
-def create_movie(request):
-    if request.method == 'POST':
-        form = MovieForm(request.POST, request.FILES)
-        if form.is_valid():
-            movie = form.save(commit=False)
-            movie.created_by = request.user
-            movie.save()
-            return redirect('movie_list')
-    else:
-        form = MovieForm()
-
-    return render(request, 'movies/create_movie.html', {'form': form})
+    def test_func(self):
+        return self.request.user.is_superuser
 
 
-class MovieUpdateView(UpdateView):
+class CreateMovieView(IsUserSuperUser, LoginRequiredMixin, CreateView):
+    model = Movie
+    form_class = MovieForm
+    template_name = 'movies/create_movie.html'
+    success_url = reverse_lazy('movie_list')
+
+
+class MovieUpdateView(IsUserSuperUser, UpdateView):
     model = Movie
     template_name = 'movies/edit_movie.html'
     fields = ['title', 'release_date', 'duration', 'description']
@@ -95,7 +90,7 @@ class MovieUpdateView(UpdateView):
     success_url = reverse_lazy('movie_list')
 
 
-class MovieDeleteView(DeleteView):
+class MovieDeleteView(IsUserSuperUser, DeleteView):
     model = Movie
     template_name = 'movies/movie_confirm_delete.html'
     context_object_name = 'movie'

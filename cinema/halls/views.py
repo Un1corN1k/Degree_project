@@ -1,11 +1,14 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, CreateView, DetailView
-from .forms import MovieSessionForm, CinemaHallForm, ReserveSeatForm
+from .forms import MovieSessionForm, CinemaHallForm, TicketForm
 from .models import CinemaHall, MovieSession, Ticket
 from movies.models import Movie
+from datetime import date, timedelta, datetime
+from movies.permissions import IsUserSuperUser
 
 
 class CinemaHallListView(ListView):
@@ -21,13 +24,14 @@ class CinemaHallCreateView(CreateView):
     success_url = reverse_lazy('user_profile')
 
 
-class MovieSessionListView(ListView):
+class MovieSessionListView(LoginRequiredMixin, ListView):
     model = MovieSession
     template_name = 'halls/movie_session_list.html'
     context_object_name = 'sessions'
 
     def get_queryset(self):
-        sessions = MovieSession.objects.select_related('movie', 'hall')
+        today = date.today()
+        sessions = MovieSession.objects.select_related('movie', 'hall').filter(end_date__gte=today)
         for session in sessions:
             session.available_seats = session.get_available_seats()
         return sessions
@@ -91,21 +95,25 @@ def movie_session_list(request):
 
 def reserve_seat(request, session_id):
     session = get_object_or_404(MovieSession, pk=session_id)
+    available_seats = list(range(1, session.hall.size + 1))
+    reserved_seats = Ticket.objects.filter(session=session).values_list('seat_number', flat=True)
 
     if request.method == 'POST':
-        form = ReserveSeatForm(request.POST, available_seats_list=session.get_available_seats_list())
+        form = TicketForm(request.POST)
         if form.is_valid():
             seat_number = form.cleaned_data['seat_number']
-            if session.reserve_seat(request.user, seat_number):
-                return render(request, 'halls/seat_reserved.html', {'session': session})
-            else:
-                return render(request, 'halls/no_seats_available.html', {'session': session})
+            if seat_number in available_seats and seat_number not in reserved_seats:
+                ticket_price = session.movie.price
+                ticket = Ticket.objects.create(user=request.user, session=session, seat_number=seat_number, price=ticket_price)
+                reserved_seats = Ticket.objects.filter(session=session).values_list('seat_number', flat=True)
+                return redirect('seat_reserved', session_id=session_id)
     else:
-        form = ReserveSeatForm(available_seats_list=session.get_available_seats_list())
+        form = TicketForm()
 
-    return render(request, 'halls/reserve_seat.html', {'session': session, 'form': form})
+    return render(request, 'halls/reserve_seat.html', {'session': session, 'available_seats': available_seats, 'reserved_seats': reserved_seats, 'form': form})
 
 
 def seat_reserved(request, session_id):
     session = get_object_or_404(MovieSession, pk=session_id)
-    return render(request, 'halls/seat_reserved.html', {'session': session})
+    ticket = session.ticket_set.last()  # Отримати останній заброньований білет для сеансу (якщо є)
+    return render(request, 'halls/seat_reserved.html', {'session': session, 'ticket': ticket})

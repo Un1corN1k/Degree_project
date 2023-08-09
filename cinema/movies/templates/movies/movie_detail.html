@@ -3,11 +3,29 @@
 {% block title %}{{ movie.title }} - MyCinema{% endblock %}
 
 {% block content %}
-    <h1>{{ movie.title }}</h1>
-    <p><strong>Дата выхода:</strong> {{ movie.release_date }}</p>
-    <p><strong>Ціна:</strong> {{ movie.price }} UAH</p>
-    <p><strong>Продолжительность:</strong> {{ movie.duration }} минут</p>
-    <p><strong>Описание:</strong> {{ movie.description }}</p>
-    <a href="{% url 'movie_update' movie.pk %}" class="btn btn-primary">Редактировать</a>
-    <a href="{% url 'movie_delete' movie.pk %}" class="btn btn-danger">Удалить</a>
+    <div class="container mt-4">
+        <div class="movie-details">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" class="img-fluid movie-poster">
+                </div>
+                <div class="col-md-8">
+                    <h1 class="movie-title">{{ movie.title }}</h1>
+                    <hr class="my-4">
+                    <p><strong>Дата виходу:</strong> {{ movie.release_date }}</p>
+                    <p><strong>Ціна:</strong> {{ movie.price }} UAH</p>
+                    <p><strong>Тривалість:</strong> {{ movie.duration }} хвилин</p>
+                    <p><strong>Опис:</strong></p>
+                    <p class="movie-description">{{ movie.description }}</p>
+
+                    {% if request.user.is_superuser %}
+                        <div class="admin-actions">
+                            <a href="{% url 'movie_update' movie.pk %}" class="btn btn-primary">Редагувати</a>
+                            <a href="{% url 'movie_delete' movie.pk %}" class="btn btn-danger">Видалити</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

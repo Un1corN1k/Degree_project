@@ -3,22 +3,39 @@
 {% block title %}Movie Sessions List{% endblock %}
 
 {% block content %}
-  <div class="container">
-    <h1 class="mb-4" style="font-family: 'Arial', sans-serif; color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 10px;">Movie Sessions List</h1>
-    <ul class="list-unstyled">
+<style>
+    .premiere-title {
+        font-size: 35px;
+        font-weight: bold;
+        color: #ffffff;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #88B04B;
+        padding-bottom: 10px;
+    }
+
+</style>
+  <div class="container mt-4">
+    <h1 class="mb-4 premiere-title">Розклад кіносеансів</h1>
+    <div class="row">
       {% for session in sessions %}
-        <li class="media mb-4">
-          <img src="{{ session.movie.poster.url }}" alt="{{ session.movie.title }}" class="mr-3" width="200" height="250">
-          <div class="media-body">
-            <h5 class="mt-0 mb-1" style="font-family: 'Arial', sans-serif; color: #007bff;">Movie: {{ session.movie.title }}</h5>
-            <p style="font-family: 'Verdana', sans-serif; color: #333;">Hall: {{ session.hall.name }}</p>
-            <p style="font-family: 'Verdana', sans-serif; color: #555; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">Start Date: {{ session.start_date }}</p>
-            <p style="font-family: 'Verdana', sans-serif; color: #555; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">End Date: {{ session.end_date }}</p>
-            <p style="font-family: 'Verdana', sans-serif; color: #555; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">Time: {{ session.movie.duration }} minutes</p>
-            <a href="{% url 'reserve_seat' session.id %}" class="btn btn-primary">Order Ticket</a>
+        <div class="col-md-10 mb-10">
+          <div class="media h-100">
+            <a href="{% url 'reserve_seat' session.id %}">
+            <img src="{{ session.movie.poster.url }}" alt="{{ session.movie.title }}" class="mr-3 rounded" width="250" height="350" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            </a>
+            <div class="media-body">
+              <h5 class="mt-0 mb-1 card-title" style="font-family: 'Arial', sans-serif; color:  #ffffff; font-size: 26px;">{{ session.movie.title }}</h5>
+              <p class="card-text" style="font-family: 'Verdana', sans-serif; color: #fff; font-size: 18px;"><strong>Зал:</strong> {{ session.hall.name }}</p>
+              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Початок прокату:</strong> {{ session.start_date }}</p>
+              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Закінчення прокату:</strong> {{ session.end_date }}</p>
+              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Тривалість:</strong> {{ session.movie.duration }} minutes</p>
+              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Ціна:</strong> {{ session.movie.price }} UAH</p>
+              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Вільних місць:</strong> {{ session.get_available_seats }}</p>
+              <a href="{% url 'reserve_seat' session.id %}" class="btn btn-primary" style="background-color: #88B04B; border-color: #88B04B;">Замовити квиток</a>
+            </div>
           </div>
-        </li>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   </div>
 {% endblock %}

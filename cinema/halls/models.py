@@ -1,6 +1,10 @@
+from datetime import timedelta, datetime
+
+from django.core.exceptions import ValidationError
 from django.db import models
 from movies.models import Movie
 from accounts.models import CustomUser
+from django.urls import reverse
 
 
 class CinemaHall(models.Model):
@@ -17,62 +21,51 @@ class MovieSession(models.Model):
     hall = models.ForeignKey(CinemaHall, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
-    ticket_price = models.DecimalField(max_digits=10, decimal_places=2)
     start_time = models.TimeField()
-    end_time = models.TimeField()
+    end_time = models.TimeField(blank=True, null=True)
     reserved_seats = models.PositiveIntegerField(default=0)
     reserved_seats_set = models.ManyToManyField("Ticket", blank=True)
 
     def get_available_seats(self):
         total_seats = self.hall.size
-        available_seats = total_seats - self.reserved_seats - self.booked_seats.count()
+        reserved_seats = self.ticket_set.count()
+        available_seats = total_seats - reserved_seats
         return available_seats
 
-    def get_available_seats_list(self):
-        total_seats = self.hall.size
-        available_seats = total_seats - self.reserved_seats
-        return list(range(1, available_seats + 1))
+    def reserve_seat(self, seat_numbers, user):
+        available_seats = self.get_available_seats()
+        tickets = []
 
-    @property
-    def available_seats(self):
-        return self.get_available_seats()
+        for seat_number in seat_numbers:
+            if available_seats > 0 and not Ticket.objects.filter(session=self, seat_number=seat_number).exists():
+                ticket_price = self.movie.price
+                ticket = Ticket.objects.create(user=user, session=self, seat_number=seat_number, price=ticket_price)
+                tickets.append(ticket)
+                available_seats -= 1
 
-    def reserve_seat(self, user, seat_number):
-        if seat_number in self.booked_seats.values_list('seat_number', flat=True):
-            return False
+        return tickets
 
-        ticket_price = self.ticket_price
-        booked_seat = BookedSeat.objects.create(session=self, seat_number=seat_number)
-        Ticket.objects.create(user=user, booked_seat=booked_seat, price=ticket_price)
-        return True
+    def get_absolute_url(self):
+        return reverse('reserve_seat', args=[str(self.id)])
 
     def __str__(self):
         return f"{self.movie.title} - {self.start_date} - {self.start_time}"
 
+    def save(self, *args, **kwargs):
+        if not self.end_time:
+            movie_duration = self.movie.duration
+            end_datetime = datetime.combine(datetime.today(), self.start_time) + timedelta(minutes=movie_duration)
+            self.end_time = end_datetime.time()
 
-class BookedSeat(models.Model):
-    session = models.ForeignKey(MovieSession, on_delete=models.CASCADE)
-    seat_number = models.PositiveIntegerField()
-
-    def __str__(self):
-        return f"{self.session} - Місце {self.seat_number}"
+        super().save(*args, **kwargs)
 
 
 class Ticket(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     session = models.ForeignKey(MovieSession, on_delete=models.CASCADE)
-    booked_seat = models.ForeignKey(BookedSeat, on_delete=models.SET_NULL, null=True, blank=True)
+    seat_number = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
-    @property
-    def seat_number(self):
-        return self.booked_seat.seat_number if self.booked_seat else None
-
-    @seat_number.setter
-    def seat_number(self, value):
-        if self.booked_seat:
-            self.booked_seat.seat_number = value
-            self.booked_seat.save()
-
     def __str__(self):
-        return f"{self.user.username} - {self.session.movie.title} - Місце {self.seat_number}"
+        return f"{self.user.username} - {self.session.movie.title} - Seat {self.seat_number}"

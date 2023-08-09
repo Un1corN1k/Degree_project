@@ -11,15 +11,18 @@ from .models import CustomUser
 from halls.models import Ticket
 
 
-class LoginRegisterView(TemplateView):
-    template_name = 'accounts/login_register.html'
+class UserProfileView(LoginRequiredMixin, DetailView):
+    model = CustomUser
+    template_name = 'accounts/user_profile.html'
+    context_object_name = 'user'
 
+    def get_object(self, queryset=None):
+        return self.request.user
 
-@login_required
-def user_profile(request):
-    user = request.user
-    reserved_tickets = Ticket.objects.filter(user=user)
-    return render(request, 'accounts/user_profile.html', {'user': user, 'reserved_tickets': reserved_tickets})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['reserved_tickets'] = Ticket.objects.filter(user=self.request.user)
+        return context
 
 
 class UserLoginView(LoginView):
@@ -30,6 +33,7 @@ class UserLoginView(LoginView):
 class UserRegistrationView(CreateView):
     template_name = 'accounts/user_registration.html'
     form_class = UserRegistrationForm
+    redirect_authenticated_user = True
     success_url = reverse_lazy('home')
 
 
