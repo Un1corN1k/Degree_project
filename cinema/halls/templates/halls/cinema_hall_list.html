@@ -1,13 +1,25 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}Cinema Halls List{% endblock %}
 
 {% block content %}
-    <h1>Cinema Halls List</h1>
-    <ul>
-        {% for hall in halls %}
-            <li>{{ hall.name }} - {{ hall.size }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'cinema-hall-create' %}">Create Cinema Hall</a>
+<div class="container py-4" style="color: white;">
+  <h1 class="text-center" style="font-size: 2rem;">Cinema Halls</h1>
+  <hr class="my-4" style="border-color: #80dfff;">
+  <div class="row">
+    {% for hall in halls %}
+    <div class="col-md-4 mb-4">
+      <div class="card bg-dark text-white">
+        <img src="{{ hall.poster.url }}" class="card-img-top" alt="{{ hall.name }}">
+        <div class="card-body">
+          <h5 class="card-title">Hall Name: {{ hall.name }}</h5>
+          <p class="card-text">Size: {{ hall.size }} seats</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<hr class="my-4">
 {% endblock %}
+

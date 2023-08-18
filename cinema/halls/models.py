@@ -1,10 +1,8 @@
 from datetime import timedelta, datetime
-
-from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.db import models
 from movies.models import Movie
 from accounts.models import CustomUser
-from django.urls import reverse
 
 
 class CinemaHall(models.Model):
@@ -24,32 +22,12 @@ class MovieSession(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField(blank=True, null=True)
     reserved_seats = models.PositiveIntegerField(default=0)
-    reserved_seats_set = models.ManyToManyField("Ticket", blank=True)
 
     def get_available_seats(self):
         total_seats = self.hall.size
         reserved_seats = self.ticket_set.count()
         available_seats = total_seats - reserved_seats
         return available_seats
-
-    def reserve_seat(self, seat_numbers, user):
-        available_seats = self.get_available_seats()
-        tickets = []
-
-        for seat_number in seat_numbers:
-            if available_seats > 0 and not Ticket.objects.filter(session=self, seat_number=seat_number).exists():
-                ticket_price = self.movie.price
-                ticket = Ticket.objects.create(user=user, session=self, seat_number=seat_number, price=ticket_price)
-                tickets.append(ticket)
-                available_seats -= 1
-
-        return tickets
-
-    def get_absolute_url(self):
-        return reverse('reserve_seat', args=[str(self.id)])
-
-    def __str__(self):
-        return f"{self.movie.title} - {self.start_date} - {self.start_time}"
 
     def save(self, *args, **kwargs):
         if not self.end_time:
@@ -59,13 +37,17 @@ class MovieSession(models.Model):
 
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.movie.title} - {self.start_date} - {self.start_time}"
+
 
 class Ticket(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    session = models.ForeignKey(MovieSession, on_delete=models.CASCADE)
-    seat_number = models.PositiveIntegerField()
+    movie_session = models.ForeignKey(MovieSession, on_delete=models.CASCADE)
+    seat = models.PositiveIntegerField(validators=[MinValueValidator(1)], blank=True, null=True)
+    reservation_date = models.DateField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.user.username} - {self.session.movie.title} - Seat {self.seat_number}"
+        return f"{self.user.username} - {self. movie_session.movie.title} - Seat {self.seat}"

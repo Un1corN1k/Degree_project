@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Профіль користувача{% endblock %}
+{% block title %}User Profile{% endblock %}
 
 {% block content %}
 <style>
@@ -63,42 +63,45 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="text-center">Профіль користувача</h3>
-                    <hr class="my-4">
+                    <h3 class="text-center">User Profile</h3>
+                    <hr class="my-4" style="border-color: #80dfff;">
                 </div>
+                <hr class="my-4">
                 <div class="card-body">
-                    <p class="mb-1"><strong>Ім'я користувача:</strong> {{ user.username }}</p>
+                    <p class="mb-1"><strong>Username:</strong> {{ user.username }}</p>
                     <p class="mb-1"><strong>Email:</strong> {{ user.email }}</p>
-                    <p class="mb-0"><strong>Дата реєстрації:</strong> {{ user.date_joined }}</p>
+                    <p class="mb-0"><strong>Registration Date:</strong> {{ user.date_joined }}</p>
                 </div>
             </div>
             <hr class="my-4">
+            {% if user.is_superuser %}
+                <div class="mt-4 text-center">
+                    <a href="{% url 'movie-session-create' %}" class="btn btn-outline-light" style="border-color: #80dfff;">Create Movie Session</a>
+                    <a href="{% url 'cinema-hall-create' %}" class="btn btn-outline-light" style="border-color: #80dfff;">Add Cinema Hall</a>
+                </div>
+            {% endif %}
             {% if reserved_tickets %}
                 <div class="mt-4">
-                    <h4 class="mb-3">Зарезервовані білети:</h4>
+                    <h4 class="mb-3">Reserved Tickets:</h4>
                     <ul class="list-group">
                         {% for ticket in reserved_tickets %}
                             <li class="list-group-item">
-                                Фільм: {{ ticket.session.movie.title }}
-                                Кінозал: {{ ticket.session.hall.name }}
-                                Місце: {{ ticket.seat_number }}
-                                Ціна: {{ ticket.price }}
+                                <p><strong>Movie:</strong> {{ ticket.movie_session.movie.title }};</p>
+                                <p><strong>Cinema Hall:</strong> {{ ticket.movie_session.hall.name }};</p>
+                                <p><strong>Start Date:</strong> {{ ticket.reservation_date }}</p>
+                                <p><strong>Start Time:</strong> {{ ticket.movie_session.start_time }}</p>
+                                <p><strong>End Time:</strong> {{ ticket.movie_session.end_time }}</p>
+                                <p><strong>Seat:</strong> {{ ticket.seat }};</p>
+                                <p><strong>Price:</strong> {{ ticket.price }};</p>
+                                <hr class="my-4">
                             </li>
                         {% endfor %}
                     </ul>
                 </div>
             {% else %}
-                <p class="mt-4">Ви ще не зарезервували жодного білету.</p>
-            {% endif %}
-            <hr class="my-4">
-            {% if user.is_superuser %}
-                <div class="mt-4 text-center">
-                    <a href="{% url 'movie-session-create' %}" class="btn btn-primary">Створити кіносеанс</a>
-                    <a href="{% url 'cinema-hall-create' %}" class="btn btn-primary">Додати кінозал</a>
-                </div>
+                <p class="mt-4">You haven't reserved any tickets yet.</p>
             {% endif %}
         </div>
     </div>
 </div>
 {% endblock %}
-

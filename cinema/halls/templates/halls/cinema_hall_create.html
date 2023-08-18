@@ -3,25 +3,27 @@
 {% block title %}Create Cinema Hall{% endblock %}
 
 {% block content %}
-  <div class="container mt-4">
+<div class="container mt-4">
     <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="text-center">Create Cinema Hall</h3>
-          </div>
-          <div class="card-body">
-            <form method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              {{ form.as_p }}
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary">Create</button>
-                <a href="{% url 'user_profile' %}" class="btn btn-secondary">Cancel</a>
-              </div>
-            </form>
-          </div>
+        <div class="col-md-6">
+            <div class="card bg-dark text-light">
+                <div class="card-header">
+                    <h3 class="text-center">Create Cinema Hall</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-outline-light" style="border-color: #80dfff;">Create</button>
+                            <a href="{% url 'user_profile' %}" class="btn btn-outline-light" style="border-color: #ff0000;">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 {% endblock %}
+
+

@@ -1,39 +1,17 @@
+from datetime import date
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .forms import MovieForm
 from .models import Movie
-from .permissions import IsUserSuperUser
+from .API.permissions import IsUserSuperUser
 
 
 class HomeListView(ListView):
     model = Movie
     template_name = 'movies/home.html'
     context_object_name = 'movies'
-
-    def get_queryset(self):
-        sort_by = self.request.GET.get('sort_order', 'date')
-        sort_direction = self.request.GET.get('sort_direction', 'asc')
-        queryset = super().get_queryset()
-
-        if sort_by == 'date':
-            if sort_direction == 'asc':
-                queryset = queryset.order_by('release_date')
-            else:
-                queryset = queryset.order_by('-release_date')
-        elif sort_by == 'price':
-            if sort_direction == 'asc':
-                queryset = queryset.order_by('price')
-            else:
-                queryset = queryset.order_by('-price')
-
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        sort_by = self.request.GET.get('sort_order', 'date')
-        context['sort_by'] = sort_by
-        return context
 
 
 class MovieListView(ListView):
@@ -71,9 +49,6 @@ class MovieDetailView(DetailView):
     template_name = 'movies/movie_detail.html'
     context_object_name = 'movie'
 
-    def test_func(self):
-        return self.request.user.is_superuser
-
 
 class CreateMovieView(IsUserSuperUser, LoginRequiredMixin, CreateView):
     model = Movie
@@ -85,7 +60,7 @@ class CreateMovieView(IsUserSuperUser, LoginRequiredMixin, CreateView):
 class MovieUpdateView(IsUserSuperUser, UpdateView):
     model = Movie
     template_name = 'movies/edit_movie.html'
-    fields = ['title', 'release_date', 'duration', 'description']
+    fields = ['title', "poster", 'release_date', 'duration', 'description']
     context_object_name = 'movie'
     success_url = reverse_lazy('movie_list')
 

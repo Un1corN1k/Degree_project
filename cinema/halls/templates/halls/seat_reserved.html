@@ -35,10 +35,11 @@
     }
 
     .reservation-title {
-        font-size: 1.5rem;
-        color: #007bff;
+        font-size: 2.2rem;
+        color: #fff;
         margin-top: 0;
         margin-bottom: 10px;
+        border-color: #80dfff;
     }
 
     .reservation-text {
@@ -61,21 +62,22 @@
 </style>
 
 <div class="container">
-    <h1 class="text-center" style="font-size: 2rem;">Місце Заброньовано</h1>
-    <hr class="my-4">
+    <h1 class="text-center" style="font-size: 2rem;">Seat Reserved</h1>
+    <hr class="my-4" style="border-color: #80dfff;">
     <div class="reservation-details">
         <div class="movie-poster">
-            <img src="{{ session.movie.poster.url }}" alt="{{ session.movie.title }}" class="img-fluid">
+            <img src="{{ movie_session.movie.poster.url }}" alt="{{ movie_session.movie.title }}" class="img-fluid">
         </div>
         <div class="reservation-info">
-            <h5 class="reservation-title">{{ session.movie.title }}</h5>
-            <p class="reservation-text">Зал: {{ session.hall.name }}</p>
-            <p class="reservation-text">Дата бронювання: {{ ticket.created_at }}</p>
-            <p class="reservation-text">Тривалість: {{ session.movie.duration }} хвилин</p>
-            <p class="reservation-text">Початок о: {{ session.start_time }}</p>
-            <p class="reservation-text">Закінчення о: {{ session.end_time }}</p>
-            <p class="reservation-text">Ваше місце №{{ ticket.seat_number }}, успішно заброньовано! </p>
-            <a href="{% url 'movie-session-list' %}" class="btn btn-primary">Повернутись назад до розкладу кіносеансів</a>
+            <h5 class="reservation-title">{{ movie_session.movie.title }}</h5>
+            <p class="reservation-text">Hall: {{ movie_session.hall.name }}</p>
+            <p class="reservation-text">Duration: {{ movie_session.movie.duration }} minutes</p>
+            <p class="reservation-text">Screening Date: {{ ticket.reservation_date }} </p>
+            <p class="reservation-text">Start Time: {{ movie_session.start_time }}</p>
+            <p class="reservation-text">End Time: {{ movie_session.end_time }}</p>
+            <p class="reservation-text">Reservation Date: {{ ticket.created_at }}</p>
+            <p class="reservation-text">Your seat №{{ ticket.seat }}, has been successfully reserved! </p>
+            <a href="{% url 'movie-session-list' %}" class="btn btn-outline-light" style="border-color: #80dfff">Back to Movie Sessions Schedule</a>
         </div>
     </div>
 </div>

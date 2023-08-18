@@ -14,4 +14,4 @@ class CinemaHallAdmin(admin.ModelAdmin):
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ['user', 'session', "created_at", "seat_number"]
+    list_display = ['user', "reservation_date", 'movie_session', 'seat']

@@ -12,16 +12,16 @@
                 <div class="col-md-8">
                     <h1 class="movie-title">{{ movie.title }}</h1>
                     <hr class="my-4">
-                    <p><strong>Дата виходу:</strong> {{ movie.release_date }}</p>
-                    <p><strong>Ціна:</strong> {{ movie.price }} UAH</p>
-                    <p><strong>Тривалість:</strong> {{ movie.duration }} хвилин</p>
-                    <p><strong>Опис:</strong></p>
+                    <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+                    <p><strong>Price:</strong> {{ movie.price }} UAH</p>
+                    <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
+                    <p><strong>Description:</strong></p>
                     <p class="movie-description">{{ movie.description }}</p>
 
                     {% if request.user.is_superuser %}
                         <div class="admin-actions">
-                            <a href="{% url 'movie_update' movie.pk %}" class="btn btn-primary">Редагувати</a>
-                            <a href="{% url 'movie_delete' movie.pk %}" class="btn btn-danger">Видалити</a>
+                            <a href="{% url 'movie_update' movie.pk %}" class="btn btn-outline-light" style="border-color: #80dfff">Edit</a>
+                            <a href="{% url 'movie_delete' movie.pk %}" class="btn btn-outline-light" style="border-color: #ff0000">Delete</a>
                         </div>
                     {% endif %}
                 </div>
@@ -29,3 +29,4 @@
         </div>
     </div>
 {% endblock %}
+

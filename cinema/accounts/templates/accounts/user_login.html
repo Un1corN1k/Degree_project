@@ -1,12 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}Авторизація - MyCinema{% endblock %}
+{% block title %}Authorization - MyCinema{% endblock %}
 
 {% block content %}
-    <h1>Авторизація </h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Ввійти</button>
-    </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark text-light">
+                <div class="card-header">
+                    <h1 class="text-center">Authorization</h1>
+                    <hr class="my-4" style="border-color: #80dfff;">
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-outline-light" style="border-color: #80dfff;">Log In</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 {% endblock %}

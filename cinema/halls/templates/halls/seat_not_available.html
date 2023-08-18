@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Seat Occupied{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger text-center" role="alert">
+    <strong>This time and seat are already occupied. Please try another seat or date.</strong>
+</div>
+<a href="{% url 'reserve-seat' movie_session_id=movie_session.id %}" class="btn btn-outline-light" style="border-color: #80dfff">Return</a>
+{% endblock %}

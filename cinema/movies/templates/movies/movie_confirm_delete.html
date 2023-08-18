@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Удаление фильма - MyCinema{% endblock %}
+{% block title %}Delete Movie - MyCinema{% endblock %}
 
 {% block content %}
-    <h1>Удаление фильма</h1>
-    <p>Вы действительно хотите удалить фильм "{{ movie.title }}"?</p>
+    <h1>Delete Movie</h1>
+    <p>Are you sure you want to delete the movie "{{ movie.title }}"?</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Удалить</button>
-        <a href="{% url 'movie_detail' movie.pk %}" class="btn btn-secondary">Отмена</a>
+        <button type="submit" class="btn btn-outline-light" style="border-color: #ff0000">Delete</button>
+        <a href="{% url 'movie_detail' movie.pk %}" class="btn btn-outline-light" style="border-color: #80dfff">Cancel</a>
     </form>
 {% endblock %}

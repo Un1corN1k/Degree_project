@@ -1,51 +1,58 @@
 {% extends "base.html" %}
 
-{% block title %}Список фільмів - MyCinema{% endblock %}
+{% block title %}Movie List - MyCinema{% endblock %}
 
 {% block content %}
 <div class="jumbotron bg-dark text-light rounded">
-    <h1 class="display-4">Список фільмів</h1>
-    <hr class="my-4">
-</div>
-<div class="container mt-4">
+    <h1 class="display-4">Movie List</h1>
+    <hr class="my-4" style="border-color: #80dfff;">
+    {% if request.user.is_superuser %}
+    <a href="{% url 'movie_create' %}" class="btn btn-outline-light" style="border-color: #80dfff;">Add Movie</a>
+    {% endif %}
+
+    <form method="get" class="form-inline bg-dark rounded p-3">
+        <label for="search" class="mr-2 text-light">Search Movies:</label>
+        <input type="text" name="search" id="search" class="form-control bg-dark text-light mr-2">
+        <button type="submit" class="btn btn-outline-light" style="border-color: #80dfff;">Find</button>
+    </form>
     <form method="get" class="form-inline mb-4 bg-dark rounded p-3">
-        <label for="sort_order" class="mr-2 text-light">Сортувати за:</label>
+        <label for="sort_order" class="mr-2 text-light">Sort By:</label>
         <select name="sort_order" id="sort_order" class="form-control bg-dark text-light mr-2">
-            <option value="date">Датою прем'єри</option>
-            <option value="price">Ціною</option>
+            <option value="date">Release Date</option>
+            <option value="price">Price</option>
         </select>
-        <label for="sort_direction" class="mr-2 text-light">Напрямок:</label>
+        <label for="sort_direction" class="mr-2 text-light">Direction:</label>
         <select name="sort_direction" id="sort_direction" class="form-control bg-dark text-light mr-2">
-            <option value="asc">За зростанням</option>
-            <option value="desc">За спаданням</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
         </select>
         <input type="hidden" name="sort_by" value="">
-        <button type="submit" class="btn btn-primary">Сортувати</button>
+        <button type="submit" class="btn btn-outline-light" style="border-color: #80dfff;">Sort</button>
     </form>
-
-    <div class="row">
+      <div class="row">
         {% for movie in movies %}
         <div class="col-md-4 mb-4">
             <div class="card bg-dark text-light rounded">
                 <a href="{% url 'movie_detail' movie.pk %}">
-                    <img src="{{ movie.poster.url }}" class="card-img-top rounded-top" alt="{{ movie.title }}">
+                    <div class="poster-container">
+                        <img src="{{ movie.poster.url }}" class="card-img-top rounded-top" alt="{{ movie.title }}">
+                    </div>
                 </a>
                 <div class="card-body">
                     <h5 class="card-title"><a href="{% url 'movie_detail' movie.pk %}" class="text-light">{{ movie.title }}</a></h5>
-                    <p class="card-text"><strong class="text-light">Дата виходу:</strong> {{ movie.release_date }}</p>
-                    <p class="card-text"><strong class="text-light">Тривалість:</strong> {{ movie.duration }} хвилин</p>
-                    <p class="card-text"><strong class="text-light">Опис:</strong> {{ movie.description|truncatechars:100 }}</p>
-                    <p class="card-text"><strong class="text-light">Ціна:</strong> {{ movie.price }} грн</p>
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'movie-session-list' %}" class="btn btn-success">Придбати квиток</a>
-                    {% endif %}
-                </div>
+                    <p class="card-text"><strong class="text-light">Release Date:</strong> {{ movie.release_date }}</p>
+                    <p class="card-text"><strong class="text-light">Duration:</strong> {{ movie.duration }} minutes</p>
+                    <p class="card-text"><strong class="text-light">Description:</strong> {{ movie.description|truncatechars:100 }}</p>
+                    <p class="card-text"><strong class="text-light">Price:</strong> {{ movie.price }} UAH</p>
+                    <div>
+                        {% if user.is_authenticated %}
+                    <a href="{% url 'movie-session-list' %}" class="btn btn-outline-light" style="border-color: #80ff80;">Buy Ticket</a>
+                        {% endif %}
+                    </div>
+                    </div>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
-{% if request.user.is_superuser %}
-<a href="{% url 'movie_create' %}" class="btn btn-primary mt-4">Додати фільм</a>
-{% endif %}
 {% endblock %}

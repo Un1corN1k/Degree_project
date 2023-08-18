@@ -1,5 +1,5 @@
 from django import forms
-from .models import MovieSession, CinemaHall
+from .models import MovieSession, CinemaHall, Ticket
 
 
 class CinemaHallForm(forms.ModelForm):
@@ -21,14 +21,7 @@ class MovieSessionForm(forms.ModelForm):
         }
 
 
-class SeatReservationForm(forms.Form):
-    seat_numbers = forms.MultipleChoiceField(choices=[], widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
-
-    def __init__(self, *args, **kwargs):
-        available_seats = kwargs.pop('available_seats', [])
-        super(SeatReservationForm, self).__init__(*args, **kwargs)
-        self.fields['seat_numbers'].choices = [(seat_number, f'Місце {seat_number}') for seat_number in available_seats]
-
-
-class TicketForm(forms.Form):
-    seat_number = forms.IntegerField(label='Місце', min_value=1)
+class TicketForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ['reservation_date', 'seat']
