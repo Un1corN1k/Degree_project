@@ -1,6 +1,8 @@
 from datetime import date
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .forms import MovieForm
@@ -22,7 +24,12 @@ class MovieListView(ListView):
     def get_queryset(self):
         sort_by = self.request.GET.get('sort_order', 'date')
         sort_direction = self.request.GET.get('sort_direction', 'asc')
+        search_query = self.request.GET.get('search', '')
+
         queryset = super().get_queryset()
+
+        if search_query:
+            queryset = queryset.filter(Q(title__icontains=search_query))
 
         if sort_by == 'date':
             if sort_direction == 'asc':
@@ -40,7 +47,10 @@ class MovieListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         sort_by = self.request.GET.get('sort_order', 'date')
+        search_query = self.request.GET.get('search', '')
+
         context['sort_by'] = sort_by
+        context['search_query'] = search_query
         return context
 
 
@@ -70,4 +80,3 @@ class MovieDeleteView(IsUserSuperUser, DeleteView):
     template_name = 'movies/movie_confirm_delete.html'
     context_object_name = 'movie'
     success_url = reverse_lazy('movie_list')
-

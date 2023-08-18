@@ -8,27 +8,24 @@
     <hr class="my-4" style="border-color: #80dfff;">
     {% if request.user.is_superuser %}
     <a href="{% url 'movie_create' %}" class="btn btn-outline-light" style="border-color: #80dfff;">Add Movie</a>
+     <hr class="my-4">
     {% endif %}
 
-    <form method="get" class="form-inline bg-dark rounded p-3">
-        <label for="search" class="mr-2 text-light">Search Movies:</label>
-        <input type="text" name="search" id="search" class="form-control bg-dark text-light mr-2">
-        <button type="submit" class="btn btn-outline-light" style="border-color: #80dfff;">Find</button>
-    </form>
     <form method="get" class="form-inline mb-4 bg-dark rounded p-3">
-        <label for="sort_order" class="mr-2 text-light">Sort By:</label>
-        <select name="sort_order" id="sort_order" class="form-control bg-dark text-light mr-2">
-            <option value="date">Release Date</option>
-            <option value="price">Price</option>
-        </select>
-        <label for="sort_direction" class="mr-2 text-light">Direction:</label>
-        <select name="sort_direction" id="sort_direction" class="form-control bg-dark text-light mr-2">
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-        </select>
-        <input type="hidden" name="sort_by" value="">
-        <button type="submit" class="btn btn-outline-light" style="border-color: #80dfff;">Sort</button>
-    </form>
+    <label for="sort_order" class="mr-2 text-light">Sort By:</label>
+    <select name="sort_order" id="sort_order" class="form-control bg-dark text-light mr-2">
+        <option value="date">Release Date</option>
+        <option value="price">Price</option>
+    </select>
+    <label for="sort_direction" class="mr-2 text-light">Direction:</label>
+    <select name="sort_direction" id="sort_direction" class="form-control bg-dark text-light mr-2">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+    </select>
+    <input type="text" name="search" id="search" class="form-control bg-dark text-light mr-2" placeholder="Search by title" value="{{ search_query }}">
+    <button type="submit" class="btn btn-outline-light" style="border-color: #80dfff;">Search</button>
+</form>
+
       <div class="row">
         {% for movie in movies %}
         <div class="col-md-4 mb-4">
@@ -53,6 +50,13 @@
             </div>
         </div>
         {% endfor %}
+          {% if movies|length == 0 %}
+        <div class="col-md-12 text-center mt-4">
+            <div class="alert alert-warning" role="alert">
+                Фільмів не знайдено.
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
