@@ -7,16 +7,17 @@
         <div class="movie-details">
             <div class="row">
                 <div class="col-md-4">
-                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" class="img-fluid movie-poster">
+                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" class="img-fluid rounded movie-poster-lg">
                 </div>
                 <div class="col-md-8">
                     <h1 class="movie-title">{{ movie.title }}</h1>
-                    <hr class="my-4">
+                    <hr class="my-4" style="border-color: #80dfff;">
                     <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
                     <p><strong>Price:</strong> {{ movie.price }} UAH</p>
                     <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
                     <p><strong>Description:</strong></p>
                     <p class="movie-description">{{ movie.description }}</p>
+                    <hr class="my-4">
 
                     {% if request.user.is_superuser %}
                         <div class="admin-actions">
@@ -29,4 +30,3 @@
         </div>
     </div>
 {% endblock %}
-
