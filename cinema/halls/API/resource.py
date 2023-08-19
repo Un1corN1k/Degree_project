@@ -6,21 +6,21 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CinemaHallSerializer, MovieSessionSerializer, TicketSerializer
-from movies.API.permissions import IsSuperUser
+from movies.API.permissions import IsSuperUserPermission
 from movies.API.authorization import TokenExpired
 
 
 class CinemaHallViewSet(viewsets.ModelViewSet):
     queryset = CinemaHall.objects.all()
     serializer_class = CinemaHallSerializer
-    permission_classes = [IsAuthenticated, IsSuperUser]
+    permission_classes = [IsAuthenticated, IsSuperUserPermission]
     authentication_classes = [TokenExpired, ]
 
 
 class MovieSessionViewSet(viewsets.ModelViewSet):
     queryset = MovieSession.objects.all()
     serializer_class = MovieSessionSerializer
-    permission_classes = [IsAuthenticated, IsSuperUser]
+    permission_classes = [IsAuthenticated, IsSuperUserPermission]
     authentication_classes = [TokenExpired, ]
 
 

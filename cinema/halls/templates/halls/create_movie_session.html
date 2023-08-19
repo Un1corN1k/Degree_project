@@ -14,22 +14,23 @@
                     <form method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-                        <script>
-                            flatpickr(".datetime-input", {
-                                enableTime: true,
-                                dateFormat: "Y-m-d H:i",
-                            });
-                            flatpickr(".date-input", {
-                                dateFormat: "Y-m-d",
-                            });
-                        </script>
                         <div class="text-center">
                             <button type="submit" class="btn btn-outline-light" style="border-color: #80dfff;">Create</button>
                             <a href="{% url 'user_profile' %}" class="btn btn-outline-light" style="border-color: #ff0000;">Cancel</a>
                         </div>
                     </form>
                 </div>
+                <p class="text-center mt-2">Duration of the movie: {{ form.instance.movie.duration }} minutes</p>
+                <script>
+                    document.getElementById("id_start_time").addEventListener("change", function() {
+                        const duration = {{ form.instance.movie.duration }};
+                        const startTime = new Date(`1970-01-01T${this.value}`);
+                        const endTime = new Date(startTime.getTime() + duration * 60000);
+                        const endHours = String(endTime.getUTCHours()).padStart(2, '0');
+                        const endMinutes = String(endTime.getUTCMinutes()).padStart(2, '0');
+                        document.getElementById("id_end_time").value = `${endHours}:${endMinutes}`;
+                    });
+                </script>
             </div>
         </div>
     </div>

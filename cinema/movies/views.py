@@ -1,13 +1,9 @@
-from datetime import date
-
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
-from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .forms import MovieForm
 from .models import Movie
-from .API.permissions import IsUserSuperUser
+from .API.permissions import IsSuperUserMixin
 
 
 class HomeListView(ListView):
@@ -29,7 +25,7 @@ class MovieListView(ListView):
         queryset = super().get_queryset()
 
         if search_query:
-            queryset = queryset.filter(Q(title__icontains=search_query))
+            queryset = queryset.filter(title__icontains=search_query)
 
         if sort_by == 'date':
             if sort_direction == 'asc':
@@ -60,14 +56,14 @@ class MovieDetailView(DetailView):
     context_object_name = 'movie'
 
 
-class CreateMovieView(IsUserSuperUser, LoginRequiredMixin, CreateView):
+class CreateMovieView(IsSuperUserMixin, LoginRequiredMixin, CreateView):
     model = Movie
     form_class = MovieForm
     template_name = 'movies/create_movie.html'
     success_url = reverse_lazy('movie_list')
 
 
-class MovieUpdateView(IsUserSuperUser, UpdateView):
+class MovieUpdateView(IsSuperUserMixin, UpdateView):
     model = Movie
     template_name = 'movies/edit_movie.html'
     fields = ['title', "poster", 'release_date', 'duration', 'description']
@@ -75,7 +71,7 @@ class MovieUpdateView(IsUserSuperUser, UpdateView):
     success_url = reverse_lazy('movie_list')
 
 
-class MovieDeleteView(IsUserSuperUser, DeleteView):
+class MovieDeleteView(IsSuperUserMixin, DeleteView):
     model = Movie
     template_name = 'movies/movie_confirm_delete.html'
     context_object_name = 'movie'

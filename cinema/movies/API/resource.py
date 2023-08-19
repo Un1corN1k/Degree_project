@@ -4,7 +4,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from .authorization import TokenExpired
 from .serializers import MovieSerializer
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsSuperUser
+from .permissions import IsSuperUserPermission
 from movies.models import Movie
 
 
@@ -38,7 +38,7 @@ class Home(ListAPIView):
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    permission_classes = [IsAuthenticated, IsSuperUser]
+    permission_classes = [IsAuthenticated, IsSuperUserPermission]
     authentication_classes = [TokenExpired, ]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['release_date', 'price']

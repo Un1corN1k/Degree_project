@@ -29,6 +29,7 @@
               <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Start Date:</strong> {{ session.start_date }}</p>
               <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>End Date:</strong> {{ session.end_date }}</p>
               <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Start Time:</strong> {{ session.start_time }}</p>
+              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>End Time:</strong> {{ session.end_time }}</p>
               <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Duration:</strong> {{ session.movie.duration }} minutes</p>
               <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Price:</strong> {{ session.movie.price }} UAH</p>
               <a href="{% url 'reserve_seat' session.id %}" class="btn btn-outline-light" style="border-color: #80dfff;">Book Ticket</a>
