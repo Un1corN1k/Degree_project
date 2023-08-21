@@ -40,6 +40,9 @@ class MovieSessionForm(forms.ModelForm):
             end_date__gte=start_date,
         ).exclude(pk=self.instance.pk)
 
+        if start_date > end_date:
+            raise ValidationError('Start date cannot be later than end date.')
+
         for session in conflicting_sessions:
             if session.start_date == start_date:
                 if (session.start_time < hall_reservation_to and

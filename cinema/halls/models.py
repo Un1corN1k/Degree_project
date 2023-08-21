@@ -6,7 +6,7 @@ from accounts.models import CustomUser
 
 class CinemaHall(models.Model):
     name = models.CharField(max_length=200)
-    size = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    size = models.PositiveIntegerField(validators=[MinValueValidator(5)])
     poster = models.ImageField(upload_to='posters/')
 
     def __str__(self):
@@ -20,14 +20,7 @@ class MovieSession(models.Model):
     end_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField(blank=True, null=True)
-    reserved_seats = models.PositiveIntegerField(default=0)
     hall_reservation_to = models.TimeField(blank=True, null=True)
-
-    def get_available_seats(self):
-        total_seats = self.hall.size
-        reserved_seats = self.ticket_set.count()
-        available_seats = total_seats - reserved_seats
-        return available_seats
 
     def __str__(self):
         return f"{self.movie.title} - {self.hall} - {self.start_time} - {self.end_time}"

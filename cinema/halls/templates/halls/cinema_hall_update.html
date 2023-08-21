@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Create Hall - MyCinema{% endblock %}
+{% block title %}Update Hall - MyCinema{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -8,11 +8,11 @@
         <div class="col-md-6">
             <div class="card bg-dark text-light">
                 <div class="card-header">
-                    <h1 class="text-center">Create Hall</h1>
+                    <h1 class="text-center">Update Hall</h1>
                     <hr class="my-4" style="border-color: #80dfff;">
                 </div>
                 <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <div class="text-center">
@@ -24,5 +24,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

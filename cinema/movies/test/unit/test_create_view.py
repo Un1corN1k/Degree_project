@@ -14,12 +14,10 @@ class CreateMovieViewTest(TestCase):
         cls.superuser = CustomUser.objects.create_superuser(username='admin', password='adminpassword')
         cls.client = Client()
 
-
     def test_logged_in_user_can_access_view(self):
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(reverse('movie_create'))
         self.assertEqual(response.status_code, 403)
-
 
     def test_superuser_can_access_view(self):
         self.client.login(username='admin', password='adminpassword')

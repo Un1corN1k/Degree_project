@@ -2,11 +2,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, CreateView, DetailView, FormView
+from django.views.generic import ListView, CreateView, DetailView, FormView, UpdateView, DeleteView
 from .forms import MovieSessionForm, CinemaHallForm, TicketForm
 from .models import CinemaHall, MovieSession, Ticket
 from datetime import date, timedelta
-
 from movies.API.permissions import IsSuperUserMixin
 
 
@@ -20,7 +19,22 @@ class CinemaHallCreateView(IsSuperUserMixin, CreateView):
     model = CinemaHall
     form_class = CinemaHallForm
     template_name = 'halls/cinema_hall_create.html'
-    success_url = reverse_lazy('user_profile')
+    success_url = reverse_lazy('cinema-hall-list')
+
+
+class CinemaHallUpdateView(IsSuperUserMixin, UpdateView):
+    model = CinemaHall
+    form_class = CinemaHallForm
+    template_name = 'halls/cinema_hall_update.html'
+    context_object_name = 'hall'
+    success_url = reverse_lazy('cinema-hall-list')
+
+
+class CinemaHallDeleteView(IsSuperUserMixin, DeleteView):
+    model = CinemaHall
+    template_name = 'halls/cinema_hall_delete.html'
+    context_object_name = 'hall'
+    success_url = reverse_lazy('cinema-hall-list')
 
 
 class MovieSessionListView(LoginRequiredMixin, ListView):
@@ -31,8 +45,6 @@ class MovieSessionListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         today = date.today()
         sessions = MovieSession.objects.select_related('movie', 'hall').filter(end_date__gte=today)
-        for movie_session in sessions:
-            movie_session.available_seats = movie_session.get_available_seats()
         return sessions
 
 
@@ -40,6 +52,32 @@ class MovieSessionDetailView(DetailView):
     model = MovieSession
     template_name = 'halls/movie_session_detail.html'
     context_object_name = 'movie_session'
+
+
+class MovieSessionDeleteView(IsSuperUserMixin, DeleteView):
+    model = MovieSession
+    template_name = 'halls/movie_session_delete.html'
+    context_object_name = 'movie_session'
+    success_url = reverse_lazy('movie-session-list')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.ticket_set.exists():
+            return render(request, 'halls/unavailable_update_template.html')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class MovieSessionUpdateView(IsSuperUserMixin, LoginRequiredMixin, UpdateView):
+    model = MovieSession
+    form_class = MovieSessionForm
+    template_name = 'halls/update_movie_session.html'
+    success_url = reverse_lazy('movie-session-list')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.ticket_set.exists():
+            return render(request, 'halls/unavailable_update_template.html')
+        return super().dispatch(request, *args, **kwargs)
 
 
 class CreateMovieSessionView(IsSuperUserMixin, LoginRequiredMixin, CreateView):
@@ -56,7 +94,6 @@ class ReserveSeatView(FormView):
     def get(self, request, *args, **kwargs):
         movie_session_id = kwargs['movie_session_id']
         movie_session = get_object_or_404(MovieSession, pk=movie_session_id)
-        today = date.today()
 
         available_dates = self.get_available_dates(movie_session)
 

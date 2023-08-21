@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Unavailable{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4">Update or Delete Unavailable</h1>
+  <div class="alert alert-danger">
+    Cannot Update or Delete this session as there are sold tickets associated with it.
+  </div>
+</div>
+{% endblock %}

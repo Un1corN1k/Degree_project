@@ -13,32 +13,51 @@
         padding-bottom: 10px;
     }
 
+    .center-content {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .session-block {
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
 </style>
-  <div class="container mt-4">
-    <h1 class="mb-4 premiere-title" >Movie Schedule</h1>
-    <div class="row">
-      {% for session in sessions %}
-        <div class="col-md-10 mb-10">
-          <div class="media h-100">
-            <a href="{% url 'reserve_seat' session.id %}">
-            <img src="{{ session.movie.poster.url }}" alt="{{ session.movie.title }}" class="mr-3 rounded" width="250" height="350" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-            </a>
-            <div class="media-body">
-              <h5 class="mt-0 mb-1 card-title" style="font-family: 'Arial', sans-serif; color:  #ffffff; font-size: 26px;">{{ session.movie.title }}</h5>
-              <p class="card-text" style="font-family: 'Verdana', sans-serif; color: #fff; font-size: 18px;"><strong>Hall:</strong> {{ session.hall.name }}</p>
-              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Start Date:</strong> {{ session.start_date }}</p>
-              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>End Date:</strong> {{ session.end_date }}</p>
-              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Start Time:</strong> {{ session.start_time }}</p>
-              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>End Time:</strong> {{ session.end_time }}</p>
-              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Duration:</strong> {{ session.movie.duration }} minutes</p>
-              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Price:</strong> {{ session.movie.price }} UAH</p>
-              <a href="{% url 'reserve_seat' session.id %}" class="btn btn-outline-light" style="border-color: #80dfff;">Book Ticket</a>
+<div class="container mt-4">
+  <h1 class="mb-4 premiere-title">Movie Schedule</h1>
+  <div class="row">
+    {% for session in sessions %}
+      <div class="col-md-10 mb-10">
+        <div class="media h-100 session-block" onclick="window.location='{% url 'reserve_seat' session.id %}';">
+          <a href="{% url 'reserve_seat' session.id %}">
+          <img src="{{ session.movie.poster.url }}" alt="{{ session.movie.title }}" class="mr-3 rounded" width="250" height="350" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+          </a>
+          <div class="media-body">
+            <h4 class="mt-0 mb-1 card-title" style="font-family: 'Arial', sans-serif; color:  #ffffff; font-size: 32px;">{{ session.movie.title }}</h4>
+            <p class="card-text" style="font-family: 'Verdana', sans-serif; color: #fff; font-size: 22px;"><strong>Hall:</strong> {{ session.hall.name }}</p>
+            <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Start Date:</strong> {{ session.start_date }}</p>
+            <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>End Date:</strong> {{ session.end_date }}</p>
+            <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Start Time:</strong> {{ session.start_time }}</p>
+            <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>End Time:</strong> {{ session.end_time }}</p>
+            <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Duration:</strong> {{ session.movie.duration }} minutes</p>
+            <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong>Price:</strong> {{ session.movie.price }} UAH</p>
+
+            {% if request.user.is_superuser %}
+            <div class="action-buttons center-content">
               <hr class="my-4">
+              <p class="card-text bg-dark rounded p-2 mb-1" style="font-family: 'Verdana', sans-serif; color: #fff;"><strong> Hall reservation to:</strong> {{ session.hall_reservation_to }}</p>
+              <a href="{% url 'movie-sessions-update' session.id %}" class="btn btn-outline-light" style="border-color: #80ff80;">Update</a>
+              <a href="{% url 'movie-sessions-delete' session.id %}" class="btn btn-outline-light" style="border-color: #ff0000;">Delete</a>
             </div>
+            {% endif %}
+
+
+            <hr class="my-4">
           </div>
         </div>
-
-      {% endfor %}
-    </div>
+      </div>
+    {% endfor %}
   </div>
+</div>
 {% endblock %}

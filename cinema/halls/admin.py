@@ -4,7 +4,7 @@ from .models import MovieSession, CinemaHall, Ticket
 
 @admin.register(MovieSession)
 class MovieSessionAdmin(admin.ModelAdmin):
-    list_display = ['hall', 'start_time', 'end_time', 'hall_reservation_to', 'start_date', 'end_date']
+    list_display = ['id','hall', 'start_time', 'end_time', 'hall_reservation_to', 'start_date', 'end_date']
 
 
 @admin.register(CinemaHall)

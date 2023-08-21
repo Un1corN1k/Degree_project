@@ -18,8 +18,12 @@ class Home(ListAPIView):
     def get_queryset(self):
         sort_by = self.request.GET.get('sort_order', 'date')
         sort_direction = self.request.GET.get('sort_direction', 'asc')
+        search_query = self.request.GET.get('search', '')
 
         queryset = super().get_queryset()
+
+        if search_query:
+            queryset = queryset.filter(title__icontains=search_query)
 
         if sort_by == 'date':
             if sort_direction == 'asc':

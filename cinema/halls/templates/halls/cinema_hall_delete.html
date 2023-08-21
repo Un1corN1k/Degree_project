@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Hall - MyCinema{% endblock %}
+
+{% block content %}
+    <h1>Delete Hall</h1>
+    <p>Are you sure you want to delete the hall: "{{ hall.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-light" style="border-color: #ff0000">Delete</button>
+        <a href="{% url 'cinema-hall-list'%}" class="btn btn-outline-light" style="border-color: #80dfff">Cancel</a>
+    </form>
+{% endblock %}

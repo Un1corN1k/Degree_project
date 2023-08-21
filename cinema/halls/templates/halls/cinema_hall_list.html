@@ -6,6 +6,11 @@
 <div class="container py-4" style="color: white;">
   <h1 class="text-center" style="font-size: 2rem;">Cinema Halls</h1>
   <hr class="my-4" style="border-color: #80dfff;">
+  <div class="text-center mb-3">
+    {% if request.user.is_superuser %}
+      <a href="{% url 'cinema-hall-create' %}" class="btn btn-outline-light" style="border-color: #80dfff">Create Hall</a>
+    {% endif %}
+  </div>
   <div class="row">
     {% for hall in halls %}
     <div class="col-md-4 mb-4">
@@ -14,6 +19,12 @@
         <div class="card-body">
           <h5 class="card-title">Hall Name: {{ hall.name }}</h5>
           <p class="card-text">Size: {{ hall.size }} seats</p>
+          {% if request.user.is_superuser %}
+            <div class="text-center">
+              <a href="{% url 'hall_update' hall.pk %}" class="btn btn-outline-light" style="border-color: #80ff80;">Update</a>
+              <a href="{% url 'hall_delete' hall.pk %}" class="btn btn-outline-light" style="border-color: #ff0000">Delete</a>
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>
